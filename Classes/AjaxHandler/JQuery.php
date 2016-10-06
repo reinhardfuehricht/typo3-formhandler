@@ -99,7 +99,7 @@ class JQuery extends \Typoheads\Formhandler\AjaxHandler\AbstractAjaxHandler
         if (!$disableJS) {
             $init = $this->getJavascriptFormInit($formSelector, $submitButtonSelector, $isAjaxSubmit, $autoDisableSubmitButton, $validateFields);
             $this->addJS('<script type="text/javascript" src="typo3conf/ext/formhandler/Resources/Public/JavaScript/ajax.js"></script>', 'base', false);
-            $this->addJS('<script type="text/javascript"> ' . $init . ' </script>', 'ext');
+            $this->addJS('<script type="text/javascript"> ' . $init . ' </script>', 'ext-'.sha1($formSelector));
         }
     }
 
