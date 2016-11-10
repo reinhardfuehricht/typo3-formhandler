@@ -108,7 +108,7 @@ class TcaUtility
             }
         }
 
-        $contentUid = $config['row']['uid'] ?: 0;
+        $contentUid = $config['flexParentDatabaseRow']['uid'] ?: 0;
         if (!$pid) {
             $row = $GLOBALS['TYPO3_DB']->exec_SELECTgetSingleRow('pid', 'tt_content', 'uid=' . $contentUid);
             if ($row) {
