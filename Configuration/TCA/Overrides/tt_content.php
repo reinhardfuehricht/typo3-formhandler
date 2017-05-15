@@ -15,3 +15,35 @@ $GLOBALS['TCA']['tt_content']['types']['formhandler_pi1']['showitem'] = '
 
 // Add flexform field to plugin options
 $GLOBALS['TCA']['tt_content']['types']['list']['subtypes_addlist']['formhandler_pi1'] = 'pi_flexform';
+
+if (TYPO3_MODE === 'BE') {
+
+    $file = 'FILE:EXT:formhandler/Configuration/FlexForms/flexform_ds.xml';
+
+    // Add flexform DataStructure
+    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPiFlexFormValue('*', $file, 'formhandler_pi1');
+
+    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPlugin(
+        [
+            'LLL:EXT:formhandler/Resources/Private/Language/locallang_db.xml:tt_content.list_type_pi1',
+            'formhandler_pi1'
+        ],
+        'CType',
+        'formhandler'
+    );
+
+    \TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerModule(
+        'Typoheads.' . 'formhandler',
+        'web',
+        'log',
+        'bottom',
+        [
+            'Module' => 'index, view, selectFields, export, deleteLogRows'
+        ],
+        [
+            'access' => 'user,group',
+            'icon' => 'EXT:formhandler/Resources/Public/Icons/moduleicon.gif',
+            'labels' => 'LLL:EXT:formhandler/Resources/Private/Language/locallang_mod.xml'
+        ]
+    );
+}
