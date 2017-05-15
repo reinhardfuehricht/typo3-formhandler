@@ -4,28 +4,28 @@ if (!defined('TYPO3_MODE')) {
     die ('Access denied.');
 }
 
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPItoST43($_EXTKEY, 'pi1/class.tx_formhandler_pi1.php', '_pi1', 'CType', 0);
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPItoST43('formhandler', 'pi1/class.tx_formhandler_pi1.php', '_pi1', 'CType', 0);
 
 // load default PageTS config from static file
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPageTSConfig('<INCLUDE_TYPOSCRIPT: source="FILE:EXT:' . $_EXTKEY . '/Configuration/TypoScript/pageTsConfig.ts">');
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPageTSConfig('<INCLUDE_TYPOSCRIPT: source="FILE:EXT:formhandler/Configuration/TypoScript/pageTsConfig.ts">');
 
 if (TYPO3_MODE === 'BE') {
 
-    $file = 'FILE:EXT:' . $_EXTKEY . '/Configuration/FlexForms/flexform_ds.xml';
+    $file = 'FILE:EXT:formhandler/Configuration/FlexForms/flexform_ds.xml';
 
     // Add flexform DataStructure
-    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPiFlexFormValue('*', $file, $_EXTKEY . '_pi1');
+    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPiFlexFormValue('*', $file, 'formhandler_pi1');
 
     \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPlugin(
         [
             'LLL:EXT:formhandler/Resources/Private/Language/locallang_db.xml:tt_content.list_type_pi1',
-            $_EXTKEY . '_pi1'
+            'formhandler_pi1'
         ],
         'CType'
     );
 
     \TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerModule(
-        'Typoheads.' . $_EXTKEY,
+        'Typoheads.' . 'formhandler',
         'web',
         'log',
         'bottom',
@@ -34,8 +34,8 @@ if (TYPO3_MODE === 'BE') {
         ],
         [
             'access' => 'user,group',
-            'icon' => 'EXT:' . $_EXTKEY . '/Resources/Public/Icons/moduleicon.gif',
-            'labels' => 'LLL:EXT:' . $_EXTKEY . '/Resources/Private/Language/locallang_mod.xml'
+            'icon' => 'EXT:formhandler/Resources/Public/Icons/moduleicon.gif',
+            'labels' => 'LLL:EXT:formhandler/Resources/Private/Language/locallang_mod.xml'
         ]
     );
 }
@@ -43,13 +43,13 @@ if (TYPO3_MODE === 'BE') {
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::allowTableOnStandardPages('tx_formhandler_log');
 
 $GLOBALS['TCA']['pages']['columns']['module']['config']['items'][] = [
-    'LLL:EXT:' . $_EXTKEY . '/Resources/Private/Language/locallang.xml:title',
+    'LLL:EXT:formhandler/Resources/Private/Language/locallang.xml:title',
     'formlogs',
-    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath($_EXTKEY) . 'ext_icon.gif'
+    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('formhandler') . 'ext_icon.gif'
 ];
 
 //Hook in tslib_content->stdWrap
-$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_content.php']['stdWrap'][$_EXTKEY] = 'Typoheads\Formhandler\Hooks\StdWrapHook';
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_content.php']['stdWrap']['formhandler'] = 'Typoheads\Formhandler\Hooks\StdWrapHook';
 
 $GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include']['formhandler'] = 'EXT:formhandler/Classes/Http/Validate.php';
 $GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include']['formhandler-removefile'] = 'EXT:formhandler/Classes/Http/RemoveFile.php';
