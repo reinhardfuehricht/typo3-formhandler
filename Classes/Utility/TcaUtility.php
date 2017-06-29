@@ -96,11 +96,13 @@ class TcaUtility
      */
     public function addFields_predefined($config)
     {
-        $pid = FALSE;
+        if (!isset($config['flexParentDatabaseRow'])) {
+            throw new \Exception('could not load config[flexParentDatabaseRow]', 1481134575);
+         }
+        $pid = $config['flexParentDatabaseRow']['pid'];
 
         if (is_array($GLOBALS['SOBE']->editconf['tt_content']) && reset($GLOBALS['SOBE']->editconf['tt_content']) === 'new') {
             $pid = key($GLOBALS['SOBE']->editconf['tt_content']);
-
             //Formhandler inserted after existing content element
             if(intval($pid) < 0) {
                 $element = $GLOBALS['TYPO3_DB']->exec_SELECTgetSingleRow('pid', 'tt_content', 'uid=' . abs($pid));
@@ -115,6 +117,7 @@ class TcaUtility
                 $pid = $row['pid'];
             }
         }
+
         $ts = $this->loadTS($pid);
 
         $predef = [];
