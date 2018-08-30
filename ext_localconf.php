@@ -10,10 +10,7 @@ plugin.tx_formhandler_pi1.userFunc = Typoheads\Formhandler\Controller\Dispatcher
 
 tt_content.formhandler_pi1 = COA
 tt_content.formhandler_pi1 {
-' . ($_EXTCONF['enable.']['renderFCEHeader'] ? '
-    10 < lib.stdheader
-    ' : '') . '
-    20 < plugin.tx_formhandler_pi1
+    10 < plugin.tx_formhandler_pi1
 }
 ');
 
