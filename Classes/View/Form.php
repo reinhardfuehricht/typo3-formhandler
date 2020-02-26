@@ -766,7 +766,7 @@ class Form extends AbstractView
                                                 $maxCount = $fieldSettings['errorCheck.'][$key . '.']['maxCount'];
                                                 $markers['###' . $replacedFieldname . '_maxCount###'] = $maxCount;
 
-                                                $fileCount = count($sessionFiles[$replacedFieldname]);
+                                                $fileCount = (is_array($sessionFiles) && is_array($sessionFiles[$replacedFieldname])) ? count($sessionFiles[$replacedFieldname]) : 0;
                                                 $markers['###' . $replacedFieldname . '_fileCount###'] = $fileCount;
 
                                                 $remaining = $maxCount - $fileCount;
@@ -849,8 +849,8 @@ class Form extends AbstractView
                         $onClick .= 'return false;';
 
                         $link = '<a
-								href="javascript:void(0)" 
-								class="formhandler_removelink" 
+								href="javascript:void(0)"
+								class="formhandler_removelink"
 								onclick="' . str_replace(["\n", '	'], '', $onClick) . '"
 								>' . $text . '</a>';
                     }
