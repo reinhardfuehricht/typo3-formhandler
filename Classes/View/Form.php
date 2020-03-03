@@ -439,7 +439,7 @@ class Form extends AbstractView
         }
         $markers['###HIDDEN_FIELDS###'] = '
 			<input type="hidden" name="id" value="' . $GLOBALS['TSFE']->id . '" />
-			<input type="hidden" name="' . $name . '" value="1" />
+			<input type="hidden" name="' . htmlspecialchars($name) . '" value="1" />
 		';
 
         $name = 'randomID';
@@ -447,7 +447,7 @@ class Form extends AbstractView
             $name = $this->globals->getFormValuesPrefix() . '[randomID]';
         }
         $markers['###HIDDEN_FIELDS###'] .= '
-			<input type="hidden" name="' . $name . '" value="' . htmlspecialchars($this->gp['randomID']) . '" />
+			<input type="hidden" name="' . htmlspecialchars($name) . '" value="' . htmlspecialchars($this->gp['randomID']) . '" />
 		';
 
         $name = 'removeFile';
@@ -455,7 +455,7 @@ class Form extends AbstractView
             $name = $this->globals->getFormValuesPrefix() . '[removeFile]';
         }
         $markers['###HIDDEN_FIELDS###'] .= '
-			<input type="hidden" id="removeFile-' . htmlspecialchars($this->gp['randomID']) . '" name="' . $name . '" value="" />
+			<input type="hidden" id="removeFile-' . htmlspecialchars($this->gp['randomID']) . '" name="' . htmlspecialchars($name) . '" value="" />
 		';
 
         $name = 'removeFileField';
@@ -463,7 +463,7 @@ class Form extends AbstractView
             $name = $this->globals->getFormValuesPrefix() . '[removeFileField]';
         }
         $markers['###HIDDEN_FIELDS###'] .= '
-			<input type="hidden" id="removeFileField-' . htmlspecialchars($this->gp['randomID']) . '" name="' . $name . '" value="" />
+			<input type="hidden" id="removeFileField-' . htmlspecialchars($this->gp['randomID']) . '" name="' . htmlspecialchars($name) . '" value="" />
 		';
 
         $name = 'submitField';
@@ -471,7 +471,7 @@ class Form extends AbstractView
             $name = $this->globals->getFormValuesPrefix() . '[submitField]';
         }
         $markers['###HIDDEN_FIELDS###'] .= '
-			<input type="hidden" id="submitField-' . htmlspecialchars($this->gp['randomID']) . '" name="' . $name . '" value="" />
+			<input type="hidden" id="submitField-' . htmlspecialchars($this->gp['randomID']) . '" name="' . htmlspecialchars($name) . '" value="" />
 		';
 
         $name = 'formToken';
@@ -517,7 +517,7 @@ class Form extends AbstractView
         $markers['###formValuesPrefix###'] = $this->globals->getFormValuesPrefix();
 
         if ($this->gp['generated_authCode']) {
-            $markers['###auth_code###'] = $this->gp['generated_authCode'];
+            $markers['###auth_code###'] = htmlspecialchars($this->gp['generated_authCode']);
         }
 
         $markers['###ip###'] = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('REMOTE_ADDR');
@@ -766,7 +766,7 @@ class Form extends AbstractView
                                                 $maxCount = $fieldSettings['errorCheck.'][$key . '.']['maxCount'];
                                                 $markers['###' . $replacedFieldname . '_maxCount###'] = $maxCount;
 
-                                                $fileCount = count($sessionFiles[$replacedFieldname]);
+                                                $fileCount = (is_array($sessionFiles) && is_array($sessionFiles[$replacedFieldname])) ? count($sessionFiles[$replacedFieldname]) : 0;
                                                 $markers['###' . $replacedFieldname . '_fileCount###'] = $fileCount;
 
                                                 $remaining = $maxCount - $fileCount;
@@ -849,8 +849,8 @@ class Form extends AbstractView
                         $onClick .= 'return false;';
 
                         $link = '<a
-								href="javascript:void(0)" 
-								class="formhandler_removelink" 
+								href="javascript:void(0)"
+								class="formhandler_removelink"
 								onclick="' . str_replace(["\n", '	'], '', $onClick) . '"
 								>' . $text . '</a>';
                     }

@@ -34,10 +34,10 @@ class DB extends AbstractLogger
         //set params
         $table = 'tx_formhandler_log';
 
-        $doDisableIPlog = $this->utilityFuncs->getSingle($this->settings, 'disableIPlog');
-        $fields['ip'] = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('REMOTE_ADDR');
-        if (intval($doDisableIPlog) === 1) {
-            unset($fields['ip']);
+        $doEnableIPlog = $this->utilityFuncs->getSingle($this->settings, 'enableIPlog');
+        $fields['ip'] = 'disabled';
+        if (intval($doEnableIPlog) === 1) {
+            $fields['ip'] = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('REMOTE_ADDR');
         }
         $fields['tstamp'] = time();
         $fields['crdate'] = time();
@@ -48,17 +48,17 @@ class DB extends AbstractLogger
         ksort($this->gp);
         $keys = array_keys($this->gp);
 
-        $logParams = $this->gp;
+        $logParamsFull = $this->gp;
 
         if ($this->settings['fields.']) {
             foreach ($this->settings['fields.'] as $field => $fieldConf) {
                 $field = str_replace('.', '', $field);
-                if ($fieldConf['ifIsEmpty'] && (empty($logParams[$field]) || !isset($logParams[$field]))) {
+                if ($fieldConf['ifIsEmpty'] && (empty($logParamsFull[$field]) || !isset($logParamsFull[$field]))) {
                     $value = $this->utilityFuncs->getSingle($fieldConf, 'ifIsEmpty');
-                    $logParams[$field] = $value;
+                    $logParamsFull[$field] = $value;
                 }
-                if (intval($this->utilityFuncs->getSingle($fieldConf, 'nullIfEmpty')) === 1 && (empty($logParams[$field]) || !isset($logParams[$field]))) {
-                    unset($logParams[$field]);
+                if (intval($this->utilityFuncs->getSingle($fieldConf, 'nullIfEmpty')) === 1 && (empty($logParamsFull[$field]) || !isset($logParamsFull[$field]))) {
+                    unset($logParamsFull[$field]);
                 }
             }
         }
@@ -66,7 +66,16 @@ class DB extends AbstractLogger
             $excludeFields = $this->utilityFuncs->getSingle($this->settings, 'excludeFields');
             $excludeFields = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $excludeFields);
             foreach ($excludeFields as $excludeField) {
-                unset($logParams[$excludeField]);
+                unset($logParamsFull[$excludeField]);
+            }
+        }
+
+        $logParams = [];
+        if ($this->settings['includeFields']) {
+            $includeFields = $this->utilityFuncs->getSingle($this->settings, 'includeFields');
+            $includeFields = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $includeFields);
+            foreach ($includeFields as $includeField) {
+                $logParams[$includeField] = $logParamsFull[$includeField];
             }
         }
 

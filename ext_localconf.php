@@ -1,10 +1,18 @@
 <?php
 
-if (!defined('TYPO3_MODE')) {
-    die ('Access denied.');
-}
+defined('TYPO3_MODE') || die ('Access denied.');
 
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPItoST43($_EXTKEY, 'pi1/class.tx_formhandler_pi1.php', '_pi1', 'CType', 0);
+// Adding the plugins TypoScript:
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTypoScript('formhandler', 'setup', '
+# Setting formhandler plugin TypoScript
+plugin.tx_formhandler_pi1 = USER
+plugin.tx_formhandler_pi1.userFunc = Typoheads\Formhandler\Controller\Dispatcher->main
+
+tt_content.formhandler_pi1 = COA
+tt_content.formhandler_pi1 {
+    10 < plugin.tx_formhandler_pi1
+}
+');
 
 //Hook in tslib_content->stdWrap
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tslib/class.tslib_content.php']['stdWrap'][$_EXTKEY] = 'Typoheads\Formhandler\Hooks\StdWrapHook';
